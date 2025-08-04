@@ -2,7 +2,7 @@
   "hubspot": {
     "clientId": "CLIENTIDHUBSPOT",
     "clientSecret": "CLIENTSECRETHUBSPOT",
-    "redirectUri": "https://ba729605261f.ngrok-free.app/oauth/callback"
+    "redirectUri": "{{url publica}}/oauth/callback"
   },
   "database": {
     "url": "{{ url banco }}"

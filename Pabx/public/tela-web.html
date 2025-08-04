@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonax HubSpot Integration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+        }
+
+        /* Login Screen Styles */
+        .login-screen {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #8b5cf6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            text-align: center;
+            padding: 2rem 2rem 0;
+        }
+
+        .logo {
+            width: 4rem;
+            height: 4rem;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .login-content {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 3rem;
+            padding: 0 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: white;
+        }
+
+        .btn-primary {
+            width: 100%;
+            height: 3rem;
+            background: linear-gradient(135deg, #2563eb, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Main Screen Styles */
+        .main-screen {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-outline {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            background: transparent;
+            color: #374151;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-outline:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            background: #1d4ed8;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+        }
+
+        .users-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table-header th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .table-row {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table-row:nth-child(even) {
+            background: rgba(249, 250, 251, 0.5);
+        }
+
+        .table-cell {
+            padding: 1rem 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .extension-input {
+            width: 8rem;
+            height: 2.5rem;
+            padding: 0 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .extension-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .save-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .btn-save {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #2563eb, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+        }
+
+        .btn-save:hover {
+            background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.5);
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            gap: 0.75rem;
+        }
+
+        .spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .header-right {
+                gap: 0.5rem;
+            }
+
+            .btn-outline, .btn-secondary {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .btn-outline span, .btn-secondary span {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .users-table {
+                font-size: 0.875rem;
+            }
+
+            .table-header th, .table-cell {
+                padding: 0.75rem 1rem;
+            }
+
+            .extension-input {
+                width: 6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">S</div>
+                <h1 class="login-title">Configurações de Integração</h1>
+            </div>
+            <div class="login-content">
+                <div class="form-group">
+                    <label class="form-label" for="token">Token Sonax:</label>
+                    <input type="text" id="token" class="form-input" placeholder="Digite seu token Sonax">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="clientId">ID Cliente Sonax:</label>
+                    <input type="text" id="clientId" class="form-input" placeholder="Digite seu ID Cliente">
+                </div>
+                <button id="loginBtn" class="btn-primary" disabled>Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="mainScreen" class="main-screen">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="header-logo">S</div>
+                    <h1 class="header-title">Sonax Integration</h1>
+                </div>
+                <div class="header-right">
+                    <button id="changeCredentialsBtn" class="btn-outline">
+                        <i class="fas fa-cog"></i>
+                        <span>Alterar Credenciais</span>
+                    </button>
+                    <button id="returnToHubSpotBtn" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Retornar ao HubSpot</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">Configuração de Ramais</h2>
+                <p class="page-subtitle">Configure os ramais para cada usuário do HubSpot</p>
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <span>Carregando usuários...</span>
+            </div>
+
+            <!-- Users Table -->
+            <div id="usersContainer" class="users-card hidden">
+                <table class="users-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Ramal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Save Button -->
+            <div class="save-section">
+                <button id="saveBtn" class="btn-save">
+                    <i class="fas fa-save"></i>
+                    Salvar Configurações
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global variables
+        let currentToken = '';
+        let currentClientId = '';
+        let users = [];
+        let extensions = {};
+
+        // DOM elements
+        const loginScreen = document.getElementById('loginScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const tokenInput = document.getElementById('token');
+        const clientIdInput = document.getElementById('clientId');
+        const loginBtn = document.getElementById('loginBtn');
+        const loading = document.getElementById('loading');
+        const usersContainer = document.getElementById('usersContainer');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const saveBtn = document.getElementById('saveBtn');
+        const changeCredentialsBtn = document.getElementById('changeCredentialsBtn');
+        const returnToHubSpotBtn = document.getElementById('returnToHubSpotBtn');
+
+        // Event listeners
+        tokenInput.addEventListener('input', validateLoginForm);
+        clientIdInput.addEventListener('input', validateLoginForm);
+        loginBtn.addEventListener('click', handleLogin);
+        saveBtn.addEventListener('click', handleSave);
+        changeCredentialsBtn.addEventListener('click', handleChangeCredentials);
+        returnToHubSpotBtn.addEventListener('click', handleReturnToHubSpot);
+
+        // Validate login form
+        function validateLoginForm() {
+            const token = tokenInput.value.trim();
+            const clientId = clientIdInput.value.trim();
+            loginBtn.disabled = !token || !clientId;
+        }
+
+        // Handle login
+        async function handleLogin() {
+            currentToken = tokenInput.value.trim();
+            currentClientId = clientIdInput.value.trim();
+
+            if (currentToken && currentClientId) {
+                await loadHubSpotUsers();
+                showMainScreen();
+            }
+        }
+
+        // Load HubSpot users (simulated)
+        async function loadHubSpotUsers() {
+            loading.classList.remove('hidden');
+            usersContainer.classList.add('hidden');
+
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Mock data - replace with real API call
+                // const response = await fetch('https://api.hubapi.com/settings/v3/users', {
+                //     headers: { 'Authorization': `Bearer ${currentToken}` }
+                // });
+
+                users = [
+                    { id: "1", email: "joao.silva@empresa.com", firstName: "João", lastName: "Silva" },
+                    { id: "2", email: "maria.santos@empresa.com", firstName: "Maria", lastName: "Santos" },
+                    { id: "3", email: "pedro.oliveira@empresa.com", firstName: "Pedro", lastName: "Oliveira" },
+                    { id: "4", email: "ana.costa@empresa.com", firstName: "Ana", lastName: "Costa" },
+                    { id: "5", email: "carlos.ferreira@empresa.com", firstName: "Carlos", lastName: "Ferreira" },
+                ];
+
+                renderUsers();
+            } catch (error) {
+                console.error("Erro ao carregar usuários:", error);
+                alert("Erro ao carregar usuários do HubSpot. Verifique suas credenciais.");
+            } finally {
+                loading.classList.add('hidden');
+                usersContainer.classList.remove('hidden');
+            }
+        }
+
+        // Render users table
+        function renderUsers() {
+            usersTableBody.innerHTML = '';
+
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.className = 'table-row';
+                
+                row.innerHTML = `
+                    <td class="table-cell">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">${user.firstName} ${user.lastName}</div>
+                                <div class="user-email">${user.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="table-cell">
+                        <input 
+                            type="text" 
+                            class="extension-input" 
+                            placeholder="Ex: 103, 1005"
+                            data-user-id="${user.id}"
+                            value="${extensions[user.id] || ''}"
+                        >
+                    </td>
+                `;
+
+                usersTableBody.appendChild(row);
+            });
+
+            // Add event listeners to extension inputs
+            document.querySelectorAll('.extension-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const userId = e.target.getAttribute('data-user-id');
+                    extensions[userId] = e.target.value;
+                });
+            });
+        }
+
+        // Handle save
+        function handleSave() {
+            const config = {
+                token: currentToken,
+                clientId: currentClientId,
+                extensions: extensions
+            };
+
+            console.log("Salvando configurações:", config);
+            
+            // Here you would make the API call to save to your database
+            // Example:
+            // fetch('/api/save-config', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(config)
+            // });
+
+            alert("Configurações salvas com sucesso!");
+        }
+
+        // Handle change credentials
+        function handleChangeCredentials() {
+            showLoginScreen();
+            tokenInput.value = '';
+            clientIdInput.value = '';
+            currentToken = '';
+            currentClientId = '';
+            extensions = {};
+            validateLoginForm();
+        }
+
+        // Handle return to HubSpot
+        function handleReturnToHubSpot() {
+            window.location.href = "https://app.hubspot.com";
+        }
+
+        // Show login screen
+        function showLoginScreen() {
+            loginScreen.style.display = 'flex';
+            mainScreen.style.display = 'none';
+        }
+
+        // Show main screen
+        function showMainScreen() {
+            loginScreen.style.display = 'none';
+            mainScreen.style.display = 'block';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user already has saved credentials (you would check this from your database)
+            // For now, always show login screen
+            showLoginScreen();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967da53099a0e013',t:'MTc1Mzk3MDY3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

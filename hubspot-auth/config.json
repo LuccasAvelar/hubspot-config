@@ -1,7 +1,7 @@
 {
   "hubspot": {
-    "clientId": "a4b10f43-c34f-4c20-96f4-a02d3e9c83ad",
-    "clientSecret": "5562bcd9-c339-4c18-be5c-dedf94b3091c",
+    "clientId": "CLIENTIDHUBSPOT",
+    "clientSecret": "CLIENTSECRETHUBSPOT",
     "redirectUri": "https://ba729605261f.ngrok-free.app/oauth/callback"
   },
   "database": {

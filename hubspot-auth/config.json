@@ -5,7 +5,7 @@
     "redirectUri": "https://ba729605261f.ngrok-free.app/oauth/callback"
   },
   "database": {
-    "url": "postgresql://neondb_owner:npg_mX0Z2jipCzeS@ep-mute-credit-aep71y98-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    "url": "{{ url banco }}"
   },
   "server": {
     "port": 3000

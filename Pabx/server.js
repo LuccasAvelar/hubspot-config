@@ -6,7 +6,7 @@ const { Pool } = require("pg")
 // Configuração do banco de dados
 const pool = new Pool({
   connectionString:
-    "postgresql://neondb_owner:npg_mX0Z2jipCzeS@ep-mute-credit-aep71y98-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+    "{{url banco}}",
 })
 
 // Função para fazer requisições HTTP
